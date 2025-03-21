@@ -60,4 +60,4 @@ This project is licensed under the MIT License.
 
 
 ##
-Made with ❤️ by Mohit Mahara and Anil Sharma
+Made with ❤️ by Mohit Mahara
