@@ -68,6 +68,7 @@ export const loginController = async(req, res) =>{
         const user = await UserModel.findOne({email});
 
 
+
         if(!user){
             return res.status(400).send({
                 msg : "User does not exist",
@@ -76,6 +77,7 @@ export const loginController = async(req, res) =>{
         }
 
         const isMatch = await comparePassword(password, user.password);
+
 
         if(!isMatch){
             return res.status(400).send({
@@ -98,6 +100,59 @@ export const loginController = async(req, res) =>{
             msg : "Error while logining  user",
             success : false,
             error
+        })
+    }
+}
+
+
+
+
+
+export const signUpWithGoogleController = async(req, res) =>{
+    try {
+       
+      const {userData} = req.body;
+
+
+       const name  = userData.name
+       const email  =  userData.email
+       const photo  = userData.photo
+       const googleId =  userData.uid
+
+       const isExists = await UserModel.findOne({email});
+       
+       if(!isExists){
+          const user = await new UserModel({
+              name : name,
+              email: email,
+              photoURL : photo,
+              password : null,
+              phone : null,
+              role : "user",
+              googleId : googleId,
+              authProvider : "google"
+
+          }).save();
+
+          return res.status(200).send({
+            msg : "User Registered Successfully",
+            success : true,
+            user
+           })
+
+       }
+
+       return res.status(200).send({
+        msg : "User Sign in Successfully",
+        success : true,
+        isExists
+       })
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send({
+            msg : "Internal Server Error",
+            success : false,
         })
     }
 }

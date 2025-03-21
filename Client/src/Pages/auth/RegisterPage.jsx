@@ -1,34 +1,163 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
+import { toast } from "react-toastify";
+import AuthHeader from "./AuthHeader";
+
 
 const RegisterPage = () => {
-    return (
-        <section className="flex justify-center items-center min-h-screen bg-gray-100">
-            <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
-                <h1 className="text-2xl font-bold text-center mb-4">Create an Account</h1>
-                <form className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium">Email</label>
-                        <input type="email" className="w-full p-2 border rounded-md" placeholder="name@example.com" required />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium">Password</label>
-                        <input type="password" className="w-full p-2 border rounded-md" placeholder="••••••••" required />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium">Confirm Password</label>
-                        <input type="password" className="w-full p-2 border rounded-md" placeholder="••••••••" required />
-                    </div>
-                    <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">
-                        Sign Up
-                    </button>
-                    <p className="text-center text-sm">
-                        Already have an account? <Link to="/login" className="text-blue-600 hover:underline">Login here</Link>
-                    </p>
-                </form>
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [conPassword, setConPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  const navigate = useNavigate();
+
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (password.length < 6) {
+        toast.error("Password must contain atleast 6 characters");
+        return;
+      }
+
+      if (password !== conPassword) {
+        toast.error( "Password and confirm password does not matched")
+        return;
+      }
+
+      const res = await axios.post(
+        `${import.meta.env.VITE_SERVER_API}/api/auth/register`,
+        {
+          name,
+          email,
+          phone,
+          password,
+        }
+      );
+
+      if (res.data.success) {
+        toast("Registered Successfully");
+        navigate("/login");
+      }
+    } catch (error) {
+      const { msg } = error.response.data;
+      toast.error(msg);
+    }
+  };
+
+
+  return (
+    <>
+      <div className="container-fluid login-container">
+        <AuthHeader/>
+        <div className="formContainer">
+          <form className="loginForm">
+            <div className="login-header">
+              <h1>Hi there !</h1>
+              <p>Welcome to ReliefNow.</p>
             </div>
-        </section>
-    );
-}
+
+            <div className="form-group">
+              <input
+                type="text"
+                className="form-control"
+                id="name"
+                placeholder="Name"
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value);
+                }}
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <input
+                type="email"
+                className="form-control"
+                id="email"
+                placeholder="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <input
+                type="password"
+                className="form-control"
+                id="password"
+                placeholder="password"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+                required
+              />
+              <small className="text-primary">
+                The password should contain atleast 6 characters
+              </small>
+            </div>
+
+            <div className="form-group">
+              <input
+                type="text"
+                className="form-control"
+                id="confirmPassword"
+                placeholder="Confirm Password"
+                value={conPassword}
+                onChange={(e) => {
+                  setConPassword(e.target.value);
+                }}
+                required
+              />
+            </div>
+
+
+            <div className="form-group">
+              <input
+                type="text"
+                className="form-control"
+                id="phone"
+                placeholder="Phone"
+                value={phone}
+                onChange={(e) => {
+                  setPhone(e.target.value);
+                }}
+              />
+            </div>
+
+            <div className="form-group">
+              <button
+                type="submit"
+                className="btn submitbtn"
+                onClick={handleSubmit}
+              >
+                Submit
+              </button>
+            </div>
+
+            <div className="form-group signUpCheck">
+              <p>
+                Have an account ?{" "}
+                <NavLink className="link" to={"/login"}>
+                  Login
+                </NavLink>
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </>
+  );
+};
 
 export default RegisterPage;

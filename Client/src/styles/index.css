@@ -1,4 +1,106 @@
-body {
+  *{
+      padding: 0px;
+      margin: 0px;
+      box-sizing: border-box;
+  }
+
+
+  body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
   
+  
+  /* Login and Register Page  */
+  
+  
+  .login-container{
+    height: 95vh;
+    width: 100%;
+ }
+ 
+ .login-container .navbar-brand {
+     padding-left: 20px;
+     padding-top: 10px;
+ }
+ 
+ .login-container .navbar-brand h3 {
+     font-size: 40px;
+ }
+ 
+ .formContainer{
+     width: 100%;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     padding-bottom: 20px;
+ }
+ 
+ .formContainer .login-header{
+     width: 100%;
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+     align-items: center;
+ }
+ 
+ .formContainer .login-header h1{
+    font-family: 'Poppins', system-ui;
+    font-size: 60px;
+ }
+ 
+ 
+
+ .loginForm{
+     width: 60%;
+     height: 85vh;
+     display: flex;
+     flex-direction: column;
+     border-radius: 10px;
+     background-color: rgb(192, 214, 233);
+     padding: 20px;
+     gap: 20px;
+     align-items: center;
+ }
+ 
+ .loginForm div{
+  width: 60%;
+ }
+ 
+ .loginForm div input{
+     width: 100%;
+ }
+ 
+ .loginForm div input{
+     border: none;
+     background-color: rgb(235, 232, 232);
+     padding: 10px;
+     border-radius: 12px;
+ }
+ 
+ 
+ .loginForm .submitbtn{
+     background-color: rgb(3, 3, 59);
+     color: white;
+     width : 100%;
+ }
+ 
+ .loginForm .googlebtn{
+     background-color: rgb(236, 233, 233);
+     border: 1.5px solid grey;
+     color: black;
+     width : 100%;
+ }
+ 
+ .loginForm .signUpCheck{
+     text-align: center;
+ }
+ 
+ .loginForm .signUpCheck {
+     text-align: center;
+ }
+ 
+ .loginForm .signUpCheck .link{
+    text-decoration: none;
+    font-weight: bold;
+ }
+ 

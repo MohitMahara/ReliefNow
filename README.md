@@ -21,7 +21,7 @@ cd ReliefNow
 ```sh
 cd Server
 npm install  # Install dependencies
-npm run Server    # Run the backend server
+npm run server    # Run the backend server
 ```
 
 ### 3️⃣ Frontend Setup
