@@ -47,7 +47,7 @@ export const FirebaseProvider = ({ children }) => {
   axios.defaults.headers.common['Authorization'] =  userInfo?.token
 
   useEffect(() => {
-    const data = localStorage.getItem("reliefnow");
+    const data = localStorage.getItem("reliefNow");
 
     if (data) {
       const parseData = JSON.parse(data);

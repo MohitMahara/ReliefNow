@@ -1,59 +1,107 @@
-import React, { useState } from 'react'
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
+import { UseFirebase } from "../../Contexts/firebase";
+import { CiUser } from "react-icons/ci";
 
 const Header = () => {
-    const [isOpen, setIsOpen] = useState(false);
-    const [isLoggedIn, setisLoggedIn] = useState(false);
+  const { userInfo, setUserInfo } = UseFirebase();
 
-    const handleAuth = () => {
-        setisLoggedIn(false);
-        //Other codes for the removing data of user from the client side 
+  const handleLogOut = () => {
+    try {
+      setUserInfo({
+        ...userInfo,
+        user: null,
+        token: null,
+      });
+
+      localStorage.removeItem("reliefNow");
+    } catch (error) {
+      console.log(error);
     }
+  };
 
-    return (
-
-        <div className=" text-gray-800 shadow-md">
-            <div className="container mx-auto flex justify-between items-center p-4 sticky">
-                <h1 className="text-xl font-bold italic">Relief Now</h1>
-
-                <nav className="hidden md:flex justify-center">
-                    <Link to="#" className="hover:underline mr-5">Home</Link>
-                    <Link to="#" className="hover:underline mr-5">About</Link>
-                    <Link to="#" className="hover:underline mr-5">Map</Link>
-                    <Link to="#" className="hover:underline mr-5">Emergency Details</Link>
-                </nav>
-
-                <div className="hidden md:block">
-                    {isLoggedIn ? (
-                        <button onClick={handleAuth} className="hover:underline">Logout</button>
-                    ) : (
-                        <Link to="/signup" className="hover:underline">Sign Up</Link>
-                    )}
-                </div>
-
-                <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
-                    <FontAwesomeIcon icon={isOpen ? faTimes : faBars} size="lg" />
-                </button>
+  return (
+    <div className= "navbar-container" >
+    <nav className="container navbar navbar-expand-lg navbar-light bg-light">
+      <NavLink className="navbar-brand" to="#">
+        ReliefNow
+      </NavLink>
+      <button
+        className="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span className="navbar-toggler-icon" />
+      </button>
+      <div className="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul className="navbar-nav mr-auto">
+          <li className="nav-item">
+            <NavLink className="nav-link" to="#">
+              Home
+            </NavLink>
+          </li>
+          <li className="nav-item">
+            <NavLink className="nav-link" to="#">
+              Request Help
+            </NavLink>
+          </li>
+          <li className="nav-item dropdown">
+            <NavLink
+              className="nav-link dropdown-toggle"
+              to="#"
+              id="navbarDropdown"
+              role="button"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Resources
+            </NavLink>
+            <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+              <NavLink className="dropdown-item" to="#">
+                Food
+              </NavLink>
+              <NavLink className="dropdown-item" to="#">
+                Shelter
+              </NavLink>
+              <NavLink className="dropdown-item" to="#">
+                Medical
+              </NavLink>
             </div>
-            {isOpen && (
-                <nav className="md:hidden p-4">
-                    <Link to="#" className="block hover:underline mb-5">Home</Link>
-                    <Link to="#" className="block hover:underline mb-5">About</Link>
-                    <Link to="#" className="block hover:underline mb-5">Map</Link>
-                    <Link to="#" className="block hover:underline mb-5">Emergency Details</Link>
-                    <div className="hover:underline mb-5">
-                        {isLoggedIn ? (
-                            <button onClick={handleAuth} className="hover:underline">Logout</button>
-                        ) : (
-                            <Link to="/signup" className="hover:underline mb-5">Sign Up</Link>
-                        )}
-                    </div>
-                </nav>
-            )}
-        </div>
-    )
-}
+          </li>
 
-export default Header
+          <li className="nav-item">
+            {userInfo?.token ? (
+              userInfo?.user.photoURL ? (
+                <>
+                  <img
+                    src={userInfo?.user.photoURL}
+                    className="profileIcon-small"
+                    alt="profile pic"
+                  />
+                </>
+              ) : (
+                <>
+                  <CiUser className="nav-icon" />
+                  <span>{userInfo?.user?.name}</span>
+                  <span className="ms-3" onClick={handleLogOut}>LogOut</span>
+                </>
+              )
+            ) : (
+              <NavLink className="nav-link" to="/register">
+                SignUp
+              </NavLink>
+            )}
+          </li>
+        </ul>
+      </div>
+    </nav>
+    </div>
+  );
+};
+
+export default Header;
