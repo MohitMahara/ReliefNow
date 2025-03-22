@@ -1,6 +1,7 @@
 import { hashPassword, comparePassword } from "../Helper/authHelper.js";
 import UserModel from "../Models/userModel.js"
 import jwt from "jsonwebtoken";
+import nodemailer from "nodemailer";
 
 export const registerController = async(req, res) =>{
     try {
@@ -43,11 +44,7 @@ export const registerController = async(req, res) =>{
         })
         
     } catch (error) {
-        return res.status(500).send({
-            msg : "Error while registering user",
-            success : false,
-            error
-        })
+       next(error);
     }
 }
 
@@ -96,11 +93,7 @@ export const loginController = async(req, res) =>{
         })
     
     } catch (error) {
-        return res.status(500).send({
-            msg : "Error while logining  user",
-            success : false,
-            error
-        })
+       next(error);
     }
 }
 
@@ -149,10 +142,106 @@ export const signUpWithGoogleController = async(req, res) =>{
        })
         
     } catch (error) {
-        console.log(error);
-        return res.status(500).send({
-            msg : "Internal Server Error",
-            success : false,
+       next(error);
+    }
+}
+
+
+
+export const forgetPasswordController = async(req, res) => {
+    try {
+        const {email} = req.body;
+
+        const user  = await UserModel.findOne({email});
+        
+        if(!user){
+            return res.status(400).send({
+                msg : "User does not exist",
+                success : false, 
+            })
+        }
+
+        res.status(200).send({
+            msg : "User Existed",
+            success : true
         })
+    } catch (error) {
+      next(error);
+    }
+}
+
+
+
+export const generateOtpController = async(req, res) => {
+    try {
+        const {email} = req.body;
+
+        const generateOtp = Math.floor(100000 + Math.randoom() * 900000).toString();
+
+        const otp = generateOtp();
+
+        const transporter = nodemailer.createTransport({
+            service : "gmail",
+            auth : {
+                user : process.env.USER_EMAIL,
+                pass : process.env.USER_PASSWORD
+            }
+        })
+
+
+        const mailOptions = {
+            from : process.env.USER_EMAIL,
+            to :   email, 
+            subject : "Reset Password",
+            text : `Your OTP for password reset is ${otp}. it is valid for 5 minutes`
+        }
+
+
+        await transporter.sendMail(mailOptions);
+         
+        return res.status(200).send({
+            msg  : "OTP sent to your email",
+            success : true
+        })
+
+    } catch (error) {
+        next(error);
+    }
+}
+
+
+export const verifyOtpController = async(req, res) => {
+    try {
+        
+    } catch (error) {
+        next(error);
+    }
+}
+
+
+export const resetPasswordController = async(req, res) => {
+    try {
+        const {password, email} = req.body;
+
+        const user = UserModel.fineOne({email});
+
+        if(!user){
+            return res.status(400).send({
+                msg  : "User does not exist",
+                success : false
+            })
+        }
+
+        const hashedPassword = await hashPassword(password);
+
+        await UserModel.findOneAndUpdate({email}, {password : hashedPassword});
+
+        return res.status(200).send({
+            msg : "Reset password successfully",
+            success : true
+        })
+
+    } catch (error) {
+        next(error);
     }
 }

@@ -3,6 +3,8 @@ import cors from "cors"
 import dotenv from "dotenv"
 import authRoutes from "./Routes/authRoutes.js"
 import { connectDB } from "./Config/db.js"
+import {errorMiddleware} from "./Middlewares/errorMiddleware.js";
+
 const app = express();
 
 
@@ -16,6 +18,10 @@ app.use(express.json())
 // routes
 
 app.use("/api/auth", authRoutes);
+
+// Middlewares
+
+app.use(errorMiddleware);
 
 
 app.get("/", (req, res) =>{

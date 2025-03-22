@@ -88,7 +88,7 @@ const Header = () => {
                 <>
                   <CiUser className="nav-icon" />
                   <span>{userInfo?.user?.name}</span>
-                  <span className="ms-3" onClick={handleLogOut}>LogOut</span>
+                  <span className="ps-3 ms-3" onClick={handleLogOut}>LogOut</span>
                 </>
               )
             ) : (
