@@ -124,6 +124,11 @@ const LoginPage = () => {
             </div>
 
             <div className="form-group">
+              <NavLink to={"/forget-password"}>Forget Password</NavLink>
+              
+            </div>
+
+            <div className="form-group">
               <button
                 type="submit"
                 className="btn submitbtn"

@@ -2,8 +2,9 @@ import { hashPassword, comparePassword } from "../Helper/authHelper.js";
 import UserModel from "../Models/userModel.js"
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
+import { client } from "../redisClient.js";
 
-export const registerController = async(req, res) =>{
+export const registerController = async(req, res, next) =>{
     try {
 
         const {name, email, password, phone} = req.body;
@@ -51,7 +52,7 @@ export const registerController = async(req, res) =>{
 
 
 
-export const loginController = async(req, res) =>{
+export const loginController = async(req, res, next) =>{
     try {
         const {email, password} = req.body;
 
@@ -101,7 +102,7 @@ export const loginController = async(req, res) =>{
 
 
 
-export const signUpWithGoogleController = async(req, res) =>{
+export const signUpWithGoogleController = async(req, res, next) =>{
     try {
        
       const {userData} = req.body;
@@ -148,7 +149,7 @@ export const signUpWithGoogleController = async(req, res) =>{
 
 
 
-export const forgetPasswordController = async(req, res) => {
+export const forgetPasswordController = async(req, res, next) => {
     try {
         const {email} = req.body;
 
@@ -172,13 +173,14 @@ export const forgetPasswordController = async(req, res) => {
 
 
 
-export const generateOtpController = async(req, res) => {
+export const generateOtpController = async(req, res, next) => {
     try {
         const {email} = req.body;
 
-        const generateOtp = Math.floor(100000 + Math.randoom() * 900000).toString();
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-        const otp = generateOtp();
+        await client.set(`OTP:${email}`, otp, {EX : 300});
+
 
         const transporter = nodemailer.createTransport({
             service : "gmail",
@@ -190,7 +192,7 @@ export const generateOtpController = async(req, res) => {
 
 
         const mailOptions = {
-            from : process.env.USER_EMAIL,
+            from : "ackerman5023@gmail.com",
             to :   email, 
             subject : "Reset Password",
             text : `Your OTP for password reset is ${otp}. it is valid for 5 minutes`
@@ -210,8 +212,34 @@ export const generateOtpController = async(req, res) => {
 }
 
 
-export const verifyOtpController = async(req, res) => {
+export const verifyOtpController = async(req, res, next) => {
     try {
+
+        const {otp, email} = req.body;
+
+        const storedOTP = await client.get(`OTP:${email}`);
+
+        if(!storedOTP){
+            return res.status(400).send({
+                msg : "OTP expired",
+                success : false
+            })
+        }
+
+        if(storedOTP && otp !== storedOTP){
+            return res.status(400).send({
+                msg : "Invalid OTP",
+                success : false
+            })
+        }
+
+        await client.del(`OTP:${email}`);
+
+
+        return res.status(200).send({
+            msg  : "OTP verified successfully",
+            success : true
+        })
         
     } catch (error) {
         next(error);
@@ -219,11 +247,18 @@ export const verifyOtpController = async(req, res) => {
 }
 
 
-export const resetPasswordController = async(req, res) => {
+export const resetPasswordController = async(req, res, next) => {
     try {
-        const {password, email} = req.body;
+        const {confirmPass, email} = req.body;
 
-        const user = UserModel.fineOne({email});
+        if(!confirmPass || !email){
+            return res.status(400).send({
+                msg : "All fields are required",
+                success: false
+            })
+        }
+
+        const user = UserModel.findOne({email});
 
         if(!user){
             return res.status(400).send({
@@ -232,7 +267,7 @@ export const resetPasswordController = async(req, res) => {
             })
         }
 
-        const hashedPassword = await hashPassword(password);
+        const hashedPassword = await hashPassword(confirmPass);
 
         await UserModel.findOneAndUpdate({email}, {password : hashedPassword});
 
