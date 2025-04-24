@@ -1,107 +1,197 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
 import { UseFirebase } from "../../Contexts/firebase";
-import { CiUser } from "react-icons/ci";
+import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-const Header = () => {
+export const Header = () => {
+  const [visible, setVisible] = useState(false);
   const { userInfo, setUserInfo } = UseFirebase();
+  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
-  const handleLogOut = () => {
+// For handling the mobile menu
+
+  const handleClick = () => {
+      if (visible) {
+        setVisible(false);
+        setIsOpen(false);
+      }
+      else setVisible(true);
+  };
+
+  // For handling the profile menu
+
+  const handleMenu = () =>{
+    if (isOpen) setIsOpen(false);
+    else setIsOpen(true);
+  }
+
+  // For handling the Logout
+
+  const handleLogOut = async() =>{
     try {
-      setUserInfo({
+      await setUserInfo({
         ...userInfo,
-        user: null,
-        token: null,
-      });
+        user : null,
+        token : null
+       })
 
-      localStorage.removeItem("reliefNow");
+       localStorage.removeItem("reliefnow");
+       setIsOpen(false);
+       navigate("/login");
+
     } catch (error) {
       console.log(error);
     }
-  };
+  }
 
   return (
-    <div className= "navbar-container" >
-    <nav className="container navbar navbar-expand-lg navbar-light bg-light">
-      <NavLink className="navbar-brand" to="#">
-        ReliefNow
-      </NavLink>
-      <button
-        className="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span className="navbar-toggler-icon" />
-      </button>
-      <div className="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul className="navbar-nav mr-auto">
-          <li className="nav-item">
-            <NavLink className="nav-link" to="#">
-              Home
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink className="nav-link" to="#">
-              Request Help
-            </NavLink>
-          </li>
-          <li className="nav-item dropdown">
-            <NavLink
-              className="nav-link dropdown-toggle"
-              to="#"
-              id="navbarDropdown"
-              role="button"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              Resources
-            </NavLink>
-            <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-              <NavLink className="dropdown-item" to="#">
-                Food
-              </NavLink>
-              <NavLink className="dropdown-item" to="#">
-                Shelter
-              </NavLink>
-              <NavLink className="dropdown-item" to="#">
-                Medical
-              </NavLink>
-            </div>
-          </li>
+    <>
+      <nav className="bg-white shadow-md w-full">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center py-4">
+            <Link to="/" className="flex text-2xl font-bold content-center">
+              <img
+                src=""
+                alt=""
+                className="h-10 w-10"
+              />
+              <p className="ps-2">ReliefNow</p>
+            </Link>
+            <ul className="hidden md:flex space-x-6">
+              <li>
+                <Link to="/" className="text-gray-700 hover:text-blue-600">
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link to="/request-help" className="text-gray-700 hover:text-blue-600">
+                   Request Help
+                </Link>
+              </li>
 
-          <li className="nav-item">
-            {userInfo?.token ? (
-              userInfo?.user.photoURL ? (
-                <>
-                  <img
-                    src={userInfo?.user.photoURL}
-                    className="profileIcon-small"
-                    alt="profile pic"
-                  />
-                </>
-              ) : (
-                <>
-                  <CiUser className="nav-icon" />
-                  <span>{userInfo?.user?.name}</span>
-                  <span className="ps-3 ms-3" onClick={handleLogOut}>LogOut</span>
-                </>
-              )
-            ) : (
-              <NavLink className="nav-link" to="/register">
-                SignUp
-              </NavLink>
-            )}
-          </li>
-        </ul>
-      </div>
-    </nav>
-    </div>
+              <li>
+                <Link to="/map" className="text-gray-700 hover:text-blue-600">
+                  Map
+                </Link>
+              </li>
+
+              </ul>
+
+              <div className="hidden md:flex">
+                {userInfo?.token ? (
+                  <>
+                    <div className="relative flex flex-col items-center justify-center inline-block cursor-pointer mr-2">
+                      {userInfo?.user?.photoURL ? (
+                        <img src={userInfo?.user?.photoURL} className="rounded-full w-8 border h-8" alt="user profile pic" onClick={handleMenu}/>
+                      ) : (
+
+                         <div className="w-8 h-8 bg-gray-500 rounded-full flex items-center justify-center text-white text-xl mb-4" onClick={handleMenu}>
+                            <p className="text-lg">{userInfo?.user?.name?.charAt(0)}</p>
+                         </div>
+                      )}
+
+                     {isOpen && (
+                      <div className="absolute z-1 flex flex-col bg-gray-800 text-md shadow-lg rounded-md text-white text-center top-10 left-1/2 transform -translate-x-1/2 w-25">
+                        <NavLink to="/user-dashboard" className="px-2 py-1.5 transition duration-200 ease-in-out hover:bg-gray-600 hover:text-white rounded-t-md">
+                          Dashboard
+                        </NavLink>
+                        <NavLink className="px-2 py-1.5 transition duration-200 ease-in-out hover:bg-gray-600 hover:text-white rounded-b-md" onClick={handleLogOut}>
+                          Logout
+                        </NavLink>
+                      </div>
+                     )}
+
+                    </div>
+                  </>
+                ) : (
+                  <Link to="/register" className="bg-gray-800 text-gray-200 py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200">
+                    SignUp
+                  </Link>
+                )}
+              </div>
+
+            <button
+              id="menu-btn"
+              className="md:hidden text-gray-700"
+              onClick={handleClick}
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4 6h16M4 12h16m-7 6h7"
+                />
+              </svg>
+            </button>
+
+          </div>
+          {visible && (
+            <>
+              <div id="mobile-menu" className="md:hidden">
+                <ul className="flex flex-col space-y-4 py-4 text-center bg-gray-50">
+                  <li>
+                    <Link to="/" className="block text-gray-700 hover:text-blue-600">
+                      Home
+                    </Link>
+                  </li>
+                  <li>
+
+                    <Link to="/request-help" className="block text-gray-700 hover:text-blue-600">
+                      Request Help
+                    </Link>
+
+                  </li>
+                  <li>
+                    <Link to="/map" className="block text-gray-700 hover:text-blue-600">
+                      Map
+                    </Link>
+                  </li>
+                  <li>
+                {userInfo?.token ? (
+                  <>
+                    <div className="relative flex flex-col items-center justify-center inline-block cursor-pointer mr-2">
+                      {userInfo?.user?.photoURL ? (
+                        <img src={userInfo?.user?.photoURL} className="rounded-full w-8 border h-8" alt="user profile pic" onClick={handleMenu}/>
+                      ) : (
+
+                         <div className="w-8 h-8 bg-gray-500 rounded-full flex items-center justify-center text-white text-xl mb-4" onClick={handleMenu}>
+                         <p className="text-lg">{userInfo?.user?.name?.charAt(0)}</p>
+                      </div>
+                      )}
+
+                     {isOpen && (
+                      <div className="absolute z-10 flex flex-col bg-gray-800 text-md shadow-lg rounded-md text-white text-center top-10 left-1/2 transform -translate-x-1/2 w-25">
+                        <NavLink to="/user-dashboard" className="px-2 py-1.5 transition duration-200 ease-in-out hover:bg-gray-600 hover:text-white rounded-t-md">
+                          Dashboard
+                        </NavLink>
+                        <NavLink className="px-2 py-1.5 transition duration-200 ease-in-out hover:bg-gray-600 hover:text-white rounded-b-md" onClick={handleLogOut}>
+                          Logout
+                        </NavLink>
+                      </div>
+                     )}
+
+                    </div>
+                  </>
+                ) : (
+                  <Link to="/register" className="bg-gray-800 text-gray-200 py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200">
+                    SignUp
+                  </Link>
+                )}
+              </li>
+                </ul>
+              </div>
+            </>
+          )}
+        </div>
+      </nav>
+    </>
   );
 };
-
-export default Header;
