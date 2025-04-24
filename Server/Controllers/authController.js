@@ -110,7 +110,7 @@ export const signUpWithGoogleController = async(req, res, next) =>{
 
        const name  = userData.name
        const email  =  userData.email
-       const photo  = userData.photo
+       const photo  = userData.photoURL
        const googleId =  userData.uid
 
        const isExists = await UserModel.findOne({email});
@@ -148,8 +148,7 @@ export const signUpWithGoogleController = async(req, res, next) =>{
 }
 
 
-
-export const forgetPasswordController = async(req, res, next) => {
+export const generateOtpController = async(req, res, next) => {
     try {
         const {email} = req.body;
 
@@ -161,21 +160,6 @@ export const forgetPasswordController = async(req, res, next) => {
                 success : false, 
             })
         }
-
-        res.status(200).send({
-            msg : "User Existed",
-            success : true
-        })
-    } catch (error) {
-      next(error);
-    }
-}
-
-
-
-export const generateOtpController = async(req, res, next) => {
-    try {
-        const {email} = req.body;
 
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
@@ -249,9 +233,9 @@ export const verifyOtpController = async(req, res, next) => {
 
 export const resetPasswordController = async(req, res, next) => {
     try {
-        const {confirmPass, email} = req.body;
+        const {password, email} = req.body;
 
-        if(!confirmPass || !email){
+        if(!password || !email){
             return res.status(400).send({
                 msg : "All fields are required",
                 success: false
@@ -267,7 +251,7 @@ export const resetPasswordController = async(req, res, next) => {
             })
         }
 
-        const hashedPassword = await hashPassword(confirmPass);
+        const hashedPassword = await hashPassword(password);
 
         await UserModel.findOneAndUpdate({email}, {password : hashedPassword});
 
