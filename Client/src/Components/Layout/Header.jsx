@@ -48,31 +48,31 @@ export const Header = () => {
 
   return (
     <>
-      <nav className="bg-white shadow-md w-full">
+      <nav className="bg-green-600 text-white shadow-md w-full">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center py-4">
             <Link to="/" className="flex text-2xl font-bold content-center">
-              <img
+              {/* <img
                 src=""
                 alt=""
                 className="h-10 w-10"
-              />
+              /> */}
               <p className="ps-2">ReliefNow</p>
             </Link>
             <ul className="hidden md:flex space-x-6">
               <li>
-                <Link to="/" className="text-gray-700 hover:text-blue-600">
+                <Link to="/" className="text-gray-100 hover:text-green-200">
                   Home
                 </Link>
               </li>
               <li>
-                <Link to="/request-help" className="text-gray-700 hover:text-blue-600">
+                <Link to="/request-help" className="text-gray-100 hover:text-green-200">
                    Request Help
                 </Link>
               </li>
 
               <li>
-                <Link to="/map" className="text-gray-700 hover:text-blue-600">
+                <Link to="/map" className="text-gray-100 hover:text-green-200">
                   Map
                 </Link>
               </li>
@@ -106,7 +106,7 @@ export const Header = () => {
                     </div>
                   </>
                 ) : (
-                  <Link to="/register" className="bg-gray-800 text-gray-200 py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200">
+                  <Link to="/register" className="bg-gray-100 text-green-600 py-2 px-4 rounded-lg hover:bg-green-200 transition duration-200">
                     SignUp
                   </Link>
                 )}
@@ -118,7 +118,7 @@ export const Header = () => {
               onClick={handleClick}
             >
               <svg
-                className="w-6 h-6"
+                className="w-6 h-6 text-white"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth={2}
@@ -136,21 +136,21 @@ export const Header = () => {
           {visible && (
             <>
               <div id="mobile-menu" className="md:hidden">
-                <ul className="flex flex-col space-y-4 py-4 text-center bg-gray-50">
+                <ul className="flex flex-col space-y-4 py-4 text-center bg-green-600">
                   <li>
-                    <Link to="/" className="block text-gray-700 hover:text-blue-600">
+                    <Link to="/" className="block text-gray-100 hover:text-green-200">
                       Home
                     </Link>
                   </li>
                   <li>
 
-                    <Link to="/request-help" className="block text-gray-700 hover:text-blue-600">
+                    <Link to="/request-help" className="block text-gray-100 hover:text-green-200">
                       Request Help
                     </Link>
 
                   </li>
                   <li>
-                    <Link to="/map" className="block text-gray-700 hover:text-blue-600">
+                    <Link to="/map" className="block text-gray-100 hover:text-green-200">
                       Map
                     </Link>
                   </li>
@@ -181,7 +181,7 @@ export const Header = () => {
                     </div>
                   </>
                 ) : (
-                  <Link to="/register" className="bg-gray-800 text-gray-200 py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200">
+                  <Link to="/register" className="bg-gray-100 text-green-600 py-2 px-4 rounded-lg hover:bg-green-200 transition duration-200">
                     SignUp
                   </Link>
                 )}
