@@ -1,46 +1,62 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
-import { FaGoogle } from "react-icons/fa";
-import { UseFirebase } from "../../Contexts/firebase";
-import { useNavigate } from "react-router-dom";
+import {AuthHeader} from "./AuthHeader";
+import { NavLink, Link } from "react-router-dom";
 import axios from "axios";
-import { toast} from "react-toastify";
-import AuthHeader from "./AuthHeader";
+import { useNavigate } from "react-router-dom";
+import { UseFirebase } from "../../Contexts/firebase";
+import toast from "react-hot-toast";
 
-const LoginPage = () => {
-  const { userInfo, setUserInfo, signInGoogle} = UseFirebase();
+export const LoginPage = () =>{
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const {userInfo, setUserInfo, signInGoogle} = UseFirebase();
   const navigate = useNavigate();
-  
-  const handleSubmit = async (e) => {
+
+  const handleSubmit = async (e) =>{
     e.preventDefault();
+
     try {
+       const res = await axios.post(`${import.meta.env.VITE_SERVER_API}/api/v1/auth/login`, {
+        email, password
+       });
 
-      const res = await axios.post(`${import.meta.env.VITE_SERVER_API}/api/auth/login`, {
-          email, password
-      });
+       if(res.data.success){
 
-
-      if(res.data.success){
-        toast.success("Login Successfully");
-     
-        setUserInfo({
-          ...userInfo,
-          user: res.data.user,
-          token: res.data.token,
+          setUserInfo({
+            ...userInfo,
+            user: res.data.user,
+            token: res.data.token,
         });
 
         localStorage.setItem("reliefNow", JSON.stringify(res.data));
 
-        navigate("/");
-      }
+        toast.success("Login successful");
+
+        setTimeout(() => {
+          navigate('/');
+
+        }, 1500)
+       }
+       else{
+         toast.error(res.data.message);
+       }
 
     } catch (error) {
-      const {msg} = error.response.data;
-      toast.error(msg);
+      if (error.response) {
+        const status = error.response.status;
+        const msg = error.response.data?.msg || 'Something went wrong';
+  
+        if (status === 400 || status === 404) {
+          toast.error(msg); 
+        } else {
+          toast.error('Unexpected error. Please try again.');
+        }
+      } else {
+        toast.error('Network error. Please check your connection.');
+      }
     }
-  };
+  }
 
 
   const loginwithGoogle = async (e) => {
@@ -59,7 +75,7 @@ const LoginPage = () => {
       }
        
       const res = await axios.post(
-        `${import.meta.env.VITE_SERVER_API}/api/auth/register-google`,{
+        `${import.meta.env.VITE_SERVER_API}/api/v1/auth/register-google`,{
           userData,
         }
       );
@@ -82,88 +98,81 @@ const LoginPage = () => {
 
 
     } catch (error) {
-      console.log(error);
+      if (error.response) {
+        const status = error.response.status;
+        const msg = error.response.data?.msg || 'Something went wrong';
+  
+        if (status === 400 || status === 404) {
+          toast.error(msg); 
+        } else {
+          toast.error('Unexpected error. Please try again.');
+        }
+      } else {
+        toast.error('Network error. Please check your connection.');
+      }
     }
   };
 
   return (
     <>
-      <div className="container-fluid login-container">
-        <AuthHeader/>
-        <div className="formContainer">
-          <form className="loginForm">
-            <div className="login-header">
-              <h1>Hi there !</h1>
-              <p>Welcome to ReliefNow.</p>
-            </div>
+    <AuthHeader/>
+    <div className="bg-gray-100 flex items-center justify-center h-screen">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Login</h2>
+        <form>
+          <div className="mb-4">
+            <label className="block text-gray-700">Email</label>
+            <input 
+              type="email" 
+              className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Password</label>
+            <input 
+              type="password" 
+              className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+         
+          <div className="mb-4">
+          <NavLink to="/forget-password" className="text-blue-500">Forget Password ?</NavLink>
+          </div>
 
-            <div className="form-group">
-              <input
-                type="email"
-                className="form-control"
-                id="email"
-                placeholder="email"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
-              />
-            </div>
+          <button 
+            type="submit" 
+            className="w-full bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition"
+            onClick={handleSubmit}
+          >
+            Log in
+          </button>
 
-            <div className="form-group">
-              <input
-                type="password"
-                className="form-control"
-                id="password"
-                placeholder="password"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
-              />
-            </div>
 
-            <div className="form-group">
-              <NavLink to={"/forget-password"}>Forget Password</NavLink>
-              
-            </div>
+           <div className="flex items-center my-4">
+               <div className="flex-grow border-t border-gray-300"></div>
+               <span className="px-2 text-gray-500">OR</span>
+               <div className="flex-grow border-t border-gray-300"></div>
+           </div>
 
-            <div className="form-group">
-              <button
-                type="submit"
-                className="btn submitbtn"
-                onClick={handleSubmit}
-              >
-                Submit
-              </button>
-            </div>
+           <div className="mb-4">
+             <button className="w-full flex items-center justify-center bg-white border border-gray-300 p-2 rounded-lg hover:bg-gray-100 transition" onClick={loginwithGoogle}>
+               <img src="/google-logo.png"  alt="Google Logo" className="w-8 h-8 mr-2"/>
+                 Sign in with Google
+            </button>
+           </div>
 
-            <p>OR</p>
-
-            <div className="form-group">
-              <button
-                type="submit"
-                className="btn submitbtn googlebtn"
-                onClick={loginwithGoogle}
-              >
-                <FaGoogle className="me-2" />
-                Log in with Google
-              </button>
-            </div>
-
-            <div className="form-group signUpCheck">
-              <p>
-                Don't have an account ?{" "}
-                <NavLink className="link" to={"/register"}>
-                  SignUp
-                </NavLink>
-              </p>
-            </div>
-          </form>
-        </div>
+        </form>
+        <p className="text-sm text-gray-600 mt-4 text-center">
+          Don't have an account? <Link to="/register" className="text-blue-500">Register</Link>
+        </p>
       </div>
+    </div>
     </>
-  );
-};
-
-export default LoginPage;
+  )
+}

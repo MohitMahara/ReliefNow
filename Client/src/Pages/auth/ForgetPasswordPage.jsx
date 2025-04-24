@@ -1,190 +1,208 @@
-import React, {useState} from "react";
-import AuthHeader from "./AuthHeader";
+import React, { useState } from "react";
+import { AuthHeader } from "./AuthHeader";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
-
-const ForgetPasswordPage = () => {
+export const ForgetPasswordPage = () =>{
   const [email, setEmail] = useState("");
-  const [userExists, setUserExists] = useState(false);
-  const [otp, setOtp] = useState("");
-  const [isOtpVerified, setIsOtpVerified] = useState(false);
+  const [step, setStep] = useState(1);
   const [password, setPassword] = useState("");
-  const[confirmPass, setConfirmPass] = useState("");
-
+  const [otp, setOtp] = useState("");
+  const [msg, setMsg] = useState("Enter your registered email to receive an OTP for resetting your password.");
+  const [btnText, setBtnText] = useState("Send OTP");
   const navigate = useNavigate();
 
-  const handleSubmit = async(e) =>{
-    e.preventDefault();
-    try {
-      const res = await axios.post(`${import.meta.env.VITE_SERVER_API}/api/auth/forget-password`, {
-        email
-      })
 
-      if(res.data.success){
-        setUserExists(true);
-        await axios.post(`${import.meta.env.VITE_SERVER_API}/api/auth/generate-otp`, {email});
-        console.log(res.data.msg);
-      }
-      
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-
-  const handleOTP = async(e) =>{
-    e.preventDefault();
-    try {
-      const res = await axios.post(`${import.meta.env.VITE_SERVER_API}/api/auth/verify-otp`, {
-        otp,email
-      })
-
-      if(res.data.success){
-         alert(res.data.msg);
-         setIsOtpVerified(true);
-      }
-      
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-
-  const handlePasswordReset = async(e) =>{
+  const generateOtp = async(e) =>{
     e.preventDefault();
     try {
 
-      if(password !== confirmPass){
-        alert("Password does not match");
+      if(!email){
+        toast.error("Please enter your email address");
         return;
       }
 
-      const res = await axios.post(`${import.meta.env.VITE_SERVER_API}/api/auth/reset-password`, {
-        email, confirmPass
-      })
+      setBtnText("Generating...");
+
+      const res = await axios.post(`${import.meta.env.VITE_SERVER_API}/api/v1/auth/generate-otp`, {
+        email
+      });
 
       if(res.data.success){
-         alert(res.data.msg);
-         navigate("/login");
+        setBtnText("Verify OTP");
+        setStep(2);
+        setMsg("Please enter the OTP sent to your registered email to continue.");
+      }
+
+    } catch (error) {
+      setBtnText("Send OTP");
+
+      if (error.response) {
+        const status = error.response.status;
+        const msg = error.response.data?.msg || 'Something went wrong';
+  
+        if (status === 400 || status === 404) {
+          toast.error(msg); 
+        } else {
+          toast.error('Unexpected error. Please try again.');
+        }
+      } else {
+        toast.error('Network error. Please check your connection.');
+      }
+    }
+  }
+
+
+  const verifyOtp = async(e) =>{
+    e.preventDefault();
+
+    try {
+
+      if(!otp){
+        toast.error("Please enter the OTP sent to your email");
+        return;
+      }
+
+      setBtnText("Verifying...");
+
+      const res = await axios.post(`${import.meta.env.VITE_SERVER_API}/api/v1/auth/verify-otp`, {
+        otp, email
+      });
+
+      if(res.data.success){
+        setStep(3);
+        setBtnText("Reset Password");
+        setMsg("Create a new password");
+      }
+    } catch (error) {
+      setBtnText("Verify OTP");
+
+      if (error.response) {
+        const status = error.response.status;
+        const msg = error.response.data?.msg || 'Something went wrong';
+  
+        if (status === 400 || status === 404) {
+          toast.error(msg); 
+        } else {
+          toast.error('Unexpected error. Please try again.');
+        }
+      } else {
+        toast.error('Network error. Please check your connection.');
+      }
+    }
+  }
+
+
+  const resetPassword = async(e) =>{
+    e.preventDefault();
+
+    try {
+
+      const res = await axios.post(`${import.meta.env.VITE_SERVER_API}/api/v1/auth/reset-password`, {
+        email, password
+      });
+
+      if(res.data.success){
+        toast.success('password reset successfully');
+        navigate('/login');
       }
       
     } catch (error) {
-      console.log(error);
+      setBtnText("Reset Password");
+
+      if (error.response) {
+        const status = error.response.status;
+        const msg = error.response.data?.msg || 'Something went wrong';
+  
+        if (status === 400 || status === 404) {
+          toast.error(msg); 
+        } else {
+          toast.error('Unexpected error. Please try again.');
+        }
+      } else {
+        toast.error('Network error. Please check your connection.');
+      }
     }
   }
+
 
 
   return (
     <>
-      <div className="container-fluid login-container">
-        <AuthHeader />
-        <div className="formContainer">
-          <form className="loginForm">
-            <div className="login-header">
-              <h1>Password Reset</h1>
-            </div>
+      <AuthHeader/>
+        <div className="bg-gray-100 flex items-center justify-center h-screen">
+          <div className="bg-white rounded-lg shadow-lg w-full max-w-md">
+            <h2 className="text-2xl font-bold text-center text-gray-800 my-4">Reset Password</h2>
+            <p className="text-md px-2 text-center text-gray-700">{msg}</p>
+            {/* Email verification and OTP generation */}
+            {step == 1 &&           
+             <form className="p-8">
+                 <div className="mb-4">
+                   <input type="email"
+                   placeholder="Enter your email"
+                   value={email}
+                   onChange={(e) => setEmail(e.target.value)}
+                   className="w-full px-4 py-2 border rounded-md focus:outline-none"
+                   required
+                   />
+                 </div>
 
-            <div className="form-group">
-              <input
-                type="email"
-                className="form-control"
-                id="email"
-                placeholder="Enter your registered email"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
-              />
-            </div>
+                 <button
+                 type="submit"
+                 className="w-full bg-blue-500 text-white py-2 rounded-md mt-4 hover:bg-blue-600 transition"
+                 onClick={generateOtp}
+                 >{btnText}</button>
+             </form> 
+             }
 
-            {userExists &&(<><p>OTP sent on your registered email</p></>)}
-            <div className="form-group">
-              <button
-                type="submit"
-                className="btn submitbtn"
-                onClick={handleSubmit}
-              >
-                Submit
-              </button>
-            </div>
+           {/* OTP Verification */}
 
-            {userExists && (
-              <>
-            <div className="form-group">
-              <input
-                type="text"
-                className="form-control"
-                id="otp"
-                placeholder="Enter OTP"
-                value={otp}
-                onChange={(e) => {
-                  setOtp(e.target.value);
-                }}
-              />
-            </div>
+           {step == 2 &&           
+             <form className="p-8">
+                 <div className="mb-4">
+                   <input type="text"
+                   placeholder="Enter the OTP"
+                   value={otp}
+                   onChange={(e) => setOtp(e.target.value)}
+                   className="w-full px-4 py-2 border rounded-md focus:outline-none"
+                   required
+                   />
+                 </div>
 
-
-            <div className="form-group">
-              <button
-                type="submit"
-                className="btn submitbtn"
-                onClick={handleOTP}
-              >
-                Submit
-              </button>
-            </div>
-              </>
-            )}
+                 <button
+                 type="submit"
+                 className="w-full bg-blue-500 text-white py-2 rounded-md mt-4 hover:bg-blue-600 transition"
+                 onClick={verifyOtp}
+                 >{btnText}</button>
+             </form> 
+             }
 
 
+           {/* Password reset */}
 
-         {isOtpVerified && (
-              <>
-            <div className="form-group">
-              <input
-                type="text"
-                className="form-control"
-                id="password"
-                placeholder="Enter password"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
-              />
-            </div>
+          {step == 3 &&           
+             <form className="p-8">
+                 <div className="mb-4">
+                   <input type="password"
+                   placeholder="New Password"
+                   value={password}
+                   onChange={(e) => setPassword(e.target.value)}
+                   className="w-full px-4 py-2 border rounded-md focus:outline-none"
+                   required
+                   />
+                 </div>
 
-            <div className="form-group">
-              <input
-                type="text"
-                className="form-control"
-                id="confirmpass"
-                placeholder="Confirm password"
-                value={confirmPass}
-                onChange={(e) => {
-                  setConfirmPass(e.target.value);
-                }}
-              />
-            </div>
+                 <button
+                 type="submit"
+                 className="w-full bg-blue-500 text-white py-2 rounded-md mt-4 hover:bg-blue-600 transition"
+                 onClick={resetPassword}
+                 >{btnText}</button>
+             </form> 
+             }
 
-
-            <div className="form-group">
-              <button
-                type="submit"
-                className="btn submitbtn"
-                onClick={handlePasswordReset}
-              >
-                Submit
-              </button>
-            </div>
-              </>
-            )} 
-
-          </form>
+          </div>
         </div>
-      </div>
     </>
-  );
-};
-
-export default ForgetPasswordPage;
+  )
+}

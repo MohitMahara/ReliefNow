@@ -1,26 +1,16 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom';
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
+import React from "react";
+import { NavLink } from "react-router-dom";
 
-
-function AuthHeader() {
+export const AuthHeader = () => {
   return (
-      <>
-        <NavLink className="navbar-brand d-flex" href="/">
-          <h3>ReliefNow</h3>
-        </NavLink>
-
-        <ToastContainer
-          position="top-center"
-          autoClose={2000}
-          draggable
-          pauseOnHover
-          theme="light"
-        />
-
-      </>
-  )
-}
-
-export default AuthHeader;
+    <>
+      <div className="bg-gray-100">
+        <div className="container mx-auto pt-3">
+          <NavLink to={"/"}>
+             <h2 className="text-xl">ReliefNow</h2>
+          </NavLink>
+        </div>
+      </div>
+    </>
+  );
+};

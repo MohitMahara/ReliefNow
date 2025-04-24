@@ -1,163 +1,128 @@
-import React, { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import React, {useState} from "react";
+import { AuthHeader } from "./AuthHeader";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
 import axios from "axios";
-import { v4 as uuidv4 } from "uuid";
-import { toast } from "react-toastify";
-import AuthHeader from "./AuthHeader";
+import { PhoneAuthProvider } from "firebase/auth";
 
+export const RegisterPage = () => {
 
-const RegisterPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [conPassword, setConPassword] = useState("");
   const [phone, setPhone] = useState("");
+
+
   const navigate = useNavigate();
 
 
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e) =>{
     e.preventDefault();
     try {
-      if (password.length < 6) {
-        toast.error("Password must contain atleast 6 characters");
-        return;
-      }
+       if(!name || !email || !password || !PhoneAuthProvider){
+          toast.error("Please fill all the fields");
+          return;
+       }
 
-      if (password !== conPassword) {
-        toast.error( "Password and confirm password does not matched")
-        return;
-      }
+       const res = await axios.post(`${import.meta.env.VITE_SERVER_API}/api/v1/auth/register`, {
+        name, email, password, phone
+       });
 
-      const res = await axios.post(
-        `${import.meta.env.VITE_SERVER_API}/api/auth/register`,
-        {
-          name,
-          email,
-          phone,
-          password,
-        }
-      );
+       if(res.data.success){
+          toast.success("Registered Successfully");
+          setTimeout(() =>{
+          navigate('/login');
+          }, 1500)
+       }
+       else{
+        toast.error(res.data.msg);
+       }
 
-      if (res.data.success) {
-        toast("Registered Successfully");
-        navigate("/login");
-      }
     } catch (error) {
-      const { msg } = error.response.data;
-      toast.error(msg);
+      if (error.response) {
+        const status = error.response.status;
+        const msg = error.response.data?.msg || 'Something went wrong';
+  
+        if (status === 400 || status === 404) {
+          toast.error(msg); 
+        } else {
+          toast.error('Unexpected error. Please try again.');
+        }
+      } else {
+        toast.error('Network error. Please check your connection.');
+      }
     }
-  };
-
+  }
 
   return (
     <>
-      <div className="container-fluid login-container">
-        <AuthHeader/>
-        <div className="formContainer">
-          <form className="loginForm">
-            <div className="login-header">
-              <h1>Hi there !</h1>
-              <p>Welcome to ReliefNow.</p>
-            </div>
-
-            <div className="form-group">
+      <AuthHeader/>
+      <div className="bg-gray-100 flex items-center justify-center h-screen">
+        <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+          <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
+            Register
+          </h2>
+          <form>
+            <div className="mb-4">
+              <label className="block text-gray-700">Full Name</label>
               <input
                 type="text"
-                className="form-control"
-                id="name"
-                placeholder="Name"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                }}
+                onChange={(e) => setName(e.target.value)}
                 required
               />
             </div>
-
-            <div className="form-group">
+            <div className="mb-4">
+              <label className="block text-gray-700">Email</label>
               <input
                 type="email"
-                className="form-control"
-                id="email"
-                placeholder="email"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
+                onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>
 
-            <div className="form-group">
+            <div className="mb-4">
+              <label className="block text-gray-700">Phone</label>
+              <input
+                type="text"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-gray-700">Password</label>
               <input
                 type="password"
-                className="form-control"
-                id="password"
-                placeholder="password"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
-                required
-              />
-              <small className="text-primary">
-                The password should contain atleast 6 characters
-              </small>
-            </div>
-
-            <div className="form-group">
-              <input
-                type="text"
-                className="form-control"
-                id="confirmPassword"
-                placeholder="Confirm Password"
-                value={conPassword}
-                onChange={(e) => {
-                  setConPassword(e.target.value);
-                }}
+                onChange={(e) => setPassword(e.target.value)}
                 required
               />
             </div>
 
-
-            <div className="form-group">
-              <input
-                type="text"
-                className="form-control"
-                id="phone"
-                placeholder="Phone"
-                value={phone}
-                onChange={(e) => {
-                  setPhone(e.target.value);
-                }}
-              />
-            </div>
-
-            <div className="form-group">
-              <button
-                type="submit"
-                className="btn submitbtn"
-                onClick={handleSubmit}
-              >
-                Submit
-              </button>
-            </div>
-
-            <div className="form-group signUpCheck">
-              <p>
-                Have an account ?{" "}
-                <NavLink className="link" to={"/login"}>
-                  Login
-                </NavLink>
-              </p>
-            </div>
+            <button
+              type="submit"
+              className="w-full bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition"
+              onClick={handleSubmit}
+            >
+              Register
+            </button>
           </form>
+          <p className="text-sm text-gray-600 mt-4 text-center">
+            Already have an account?
+            <Link to="/login" className="text-blue-500">
+              Login
+            </Link>
+          </p>
         </div>
       </div>
     </>
   );
 };
-
-export default RegisterPage;
