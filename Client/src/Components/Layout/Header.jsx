@@ -37,7 +37,7 @@ export const Header = () => {
         token : null
        })
 
-       localStorage.removeItem("reliefnow");
+       localStorage.removeItem("reliefNow");
        setIsOpen(false);
        navigate("/login");
 
