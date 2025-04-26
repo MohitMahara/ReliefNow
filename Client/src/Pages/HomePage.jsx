@@ -7,9 +7,21 @@ import { LuHandHelping } from "react-icons/lu";
 import { MdOutlineNotificationsActive } from "react-icons/md";
 import { FaCheck } from "react-icons/fa";
 import { LiaAmbulanceSolid } from "react-icons/lia";
+import {toast} from "react-hot-toast";
 
 
 export const HomePage = () => {
+
+  const handleSubmit = (e) =>{
+    e.preventDefault();
+    try {
+      
+    } catch (error) {
+      toast.error(error.message);
+    }
+  }
+
+
   return (
     <Layout>
       <div className="px-8 h-screen relative w-full homepage bg-cover bg-center">
@@ -193,7 +205,30 @@ export const HomePage = () => {
 
       <section className="bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
         <div className="w-full md:max-w-6xl mx-auto">
-           <h2 className="text-3xl font-extrabold text-gray-900 mb-8">Feel free to give us a feedback</h2>
+           <h2 className="text-3xl font-extrabold text-gray-900 mb-8">Feel free to give us feedback</h2>
+           <p>Your feedback is important to us. Please let us know how we can improve our site.</p>
+
+           <form className="mt-8 w-full">
+             <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">Your Name</label>
+                <input type="text" className="shadow border rounded w-full py-2 px-3 text-gray-700 focus:outline-none leading-tight focus:shadow-outline" />
+             </div>
+
+             <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                <input type="email" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+             </div>
+
+             <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">Description</label>
+                <textarea rows={10} cols={50} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+             </div>
+
+             <div className="mb-4">
+               <button className="w-full rounded-lg py-2 px-8 bg-green-700 text-white font-semibold hover:bg-green-600 transition-colors duration-300">Submit</button>
+             </div>
+
+           </form>
         </div>
       </section>
     </Layout>
