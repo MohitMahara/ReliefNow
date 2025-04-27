@@ -6,6 +6,8 @@ import {RegisterPage} from "./Pages/auth/RegisterPage";
 import {ForgetPasswordPage} from "./Pages/auth/ForgetPasswordPage";
 import { Toaster } from "react-hot-toast";
 import "./styles/App.css";
+import RoleCheck from "./Routes/RoleCheck";
+import { Dashboard } from "./Pages/Dashboard/Dashboard";
 
 function App() {
   return (
@@ -17,6 +19,13 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forget-password" element={<ForgetPasswordPage />} />
+
+        <Route path="/dashboard" element={<Dashboard />}>
+          <Route path="profile" element={<h1>Profile</h1>} />
+
+        </Route>
+
+
       </Routes>
     </>
   );

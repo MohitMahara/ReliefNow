@@ -100,9 +100,9 @@ export const Header = () => {
 
                      {isOpen && (
                       <div className="absolute z-20 flex flex-col bg-gray-800 text-md shadow-lg rounded-md text-white text-center top-10 left-1/2 transform -translate-x-1/2 w-25">
-                        <NavLink to="/user-dashboard" className="px-2 py-1.5 transition duration-200 ease-in-out hover:bg-gray-600 hover:text-white rounded-t-md">
+                        <NavLink to= "/dashboard" className="px-2 py-1.5 transition duration-200 ease-in-out hover:bg-gray-600 hover:text-white rounded-t-md">
                           Dashboard
-                        </NavLink>
+                        </NavLink>                        
                         <NavLink className="px-2 py-1.5 transition duration-200 ease-in-out hover:bg-gray-600 hover:text-white rounded-b-md" onClick={handleLogOut}>
                           Logout
                         </NavLink>
@@ -182,9 +182,9 @@ export const Header = () => {
 
                      {isOpen && (
                       <div className="absolute z-20 flex flex-col bg-gray-800 text-md shadow-lg rounded-md text-white text-center top-10 left-1/2 transform -translate-x-1/2 w-25">
-                        <NavLink to="/user-dashboard" className="px-2 py-1.5 transition duration-200 ease-in-out hover:bg-gray-600 hover:text-white rounded-t-md">
+                        <NavLink to= "/dashboard" className="px-2 py-1.5 transition duration-200 ease-in-out hover:bg-gray-600 hover:text-white rounded-t-md">
                           Dashboard
-                        </NavLink>
+                        </NavLink>  
                         <NavLink className="px-2 py-1.5 transition duration-200 ease-in-out hover:bg-gray-600 hover:text-white rounded-b-md" onClick={handleLogOut}>
                           Logout
                         </NavLink>
