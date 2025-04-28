@@ -52,11 +52,6 @@ export const Header = () => {
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center py-4">
             <Link to="/" className="flex text-2xl font-bold content-center">
-              {/* <img
-                src=""
-                alt=""
-                className="h-10 w-10"
-              /> */}
               <p className="ps-2">ReliefNow</p>
             </Link>
             <ul className="hidden md:flex space-x-6">
@@ -66,8 +61,8 @@ export const Header = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/request-help" className="text-gray-100 hover:text-green-200">
-                   Request Help
+                <Link to="/resources" className="text-gray-100 hover:text-green-200">
+                   Resources
                 </Link>
               </li>
 
@@ -150,8 +145,8 @@ export const Header = () => {
                   </li>
                   <li>
 
-                    <Link to="/request-help" className="block text-gray-100 hover:text-green-200">
-                      Request Help
+                    <Link to="/resources" className="block text-gray-100 hover:text-green-200">
+                      Resources
                     </Link>
 
                   </li>

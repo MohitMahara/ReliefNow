@@ -53,10 +53,10 @@ export const HomePage = () => {
             className="flex flex-col md:flex-row gap-4 justify-center"
           >
             <NavLink
-              to={"/request-help"}
+              to={"/rescue-request"}
               className="bg-green-700 text-gray-100 px-6 py-3 rounded-full font-semibold hover:bg-green-600 transition-colors"
             >
-              Request Help
+              Rescue Request
             </NavLink>
             <NavLink
               to={"/volunteer"}
