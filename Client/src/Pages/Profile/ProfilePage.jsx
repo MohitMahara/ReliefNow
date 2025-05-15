@@ -5,7 +5,7 @@ export const ProfilePage = () => {
   const { userInfo } = UseFirebase();
 
   return (
-      <div className="w-[70%] bg-white shadow-lg rounded-xl p-6 flex flex-col items-center h-full">
+      <div className="w-[95%] md:w-[70%] bg-white shadow-lg rounded-xl p-6 flex flex-col items-center h-full">
         
         <div className="w-full">
           <ProfileField label="First Name" value={userInfo?.user?.name || "N/A"} />

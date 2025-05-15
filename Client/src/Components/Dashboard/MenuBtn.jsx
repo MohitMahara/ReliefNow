@@ -1,18 +1,29 @@
-import React from "react";
-import { Layout } from "../Layout/Layout";
-import { UseFirebase } from "../../Contexts/firebaseContext";
-import { ProfilePage } from "../Profile/ProfilePage";
+import React, {useState} from "react";
+import { UseFirebase } from "../../Contexts/firebase";
 import { NavLink } from "react-router-dom";
 
-export const UserDashboard = () => {
-  const { userInfo } = UseFirebase();
+export const MenuBtn  = () => {
+    const [isOpen, setIsOpen] = useState(false);
+    const {userInfo} = UseFirebase();
 
-  return (
-    <>
-      <Layout>
-        <div className="flex flex-row px-4 py-8 bg-gray-100 w-auto h-screen">
-          <div className="left-sidebar w-1/4 bg-white p-4 rounded-lg shadow-md h-full">
-            <div className="profile-header flex flex-col items-center justify-center mb-4">
+
+
+    const handleClick = () =>{
+        if(isOpen)setIsOpen(false);
+        else setIsOpen(true);
+    }
+
+    return <>
+       <div className="block md:hidden" onClick={handleClick}>
+         &#9776; Menu
+       </div>
+
+       {isOpen &&(
+         <div className="md:hidden fixed top-0 left-0 w-full h-full bg-black opacity-50 z-10 transition duration-300 ease-in-out" onClick={() => setIsOpen(false)}></div>
+       )}
+       
+        <div className={`md:hidden left-0 top-30 fixed w-[65%] bg-white h-100 shadow-lg rounded-lg p-4 z-20 mt-4 transition duration-200 ease-in-out ${isOpen ? "block" : "hidden"}`}>
+           <div className="profile-header flex flex-col items-center justify-center mb-4">
               {userInfo?.user?.photoURL ? (
                 <>
                   <img
@@ -24,6 +35,11 @@ export const UserDashboard = () => {
                   <h3 className="pt-1 text-lg font-bold">
                     {userInfo?.user.name}
                   </h3>
+
+                  
+                  <p className="pt-1 text-sm font-semibold text-gray-500">
+                    {userInfo?.user?.role}
+                  </p>
                 </>
               ) : (
                 <>
@@ -33,6 +49,10 @@ export const UserDashboard = () => {
                   <h3 className="pt-1 text-lg font-bold">
                     {userInfo?.user?.name}
                   </h3>
+
+                  <p className="pt-1 text-md text-gray-500">
+                    {userInfo?.user?.role}
+                  </p>
 
                 </>
               )}
@@ -48,13 +68,7 @@ export const UserDashboard = () => {
               <NavLink to="/organized-events" className="mb-3 bg-gray-300 p-2 w-full text-center rounded-sm text-md hover:bg-gray-500 cursor-pointer hover:text-white transition duration-200">Organized Events</NavLink>
 
             </div>
-
-          </div>
-          <div className="right-content w-3/4  p-4  min-h-full ml-4 flex flex-col items-center justify-center">
-              <ProfilePage/>
-          </div>
         </div>
-      </Layout>
+
     </>
-  );
-};
+}
