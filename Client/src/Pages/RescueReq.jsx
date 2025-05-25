@@ -1,6 +1,8 @@
 import React, {useState} from "react";
 import { Layout } from "../Components/Layout/Layout";
 import axios from "axios";
+import {toast} from "react-hot-toast";
+import { MdOutlineMyLocation } from "react-icons/md";
 
 export const ResueReq = () => {
 
@@ -12,19 +14,45 @@ export const ResueReq = () => {
   const [location, setLocation] = useState("");
 
 
-
-  const handleSubmit = async() => {
+  const handleSubmit = async(e) => {
+    e.preventDefault();
     try {
       const res = await axios.post(`${import.meta.env.VITE_SERVER_API}/api/v1/rescue/rescue-req`, {
         fullname,phone, description, location, disasterType, emergencyLevel
       });
 
-      if(res.status.success){
-   
+      if(res.data.success){
+        toast.success("Rescue request submitted successfully");
+        setFullName("");
+        setPhone("");
+        setEmergencyLevel("");
+        setDescription("");
+        setDisasterType("");
+        setLocation("");
       }
       
     } catch (error) {
+      toast.error(error.message);
+    }
+  }
+
+  const handleGetLocation = async() => {
+    try {
+
+      if(!navigator.geolocation){
+        toast.error("GeoLocation is not supported by your browser, Enter your location manually");
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        const {latitude, longitude} = position.coords;
+        const res =  await axios.get(`https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=${import.meta.env.VITE_OPENCAGE_API_KEY}`)
+        const loca = res.data.results[0]?.formatted;
+        setLocation(loca);
+      })
       
+    } catch (error) {
+      toast.error(error.message);
     }
   }
 
@@ -35,17 +63,18 @@ export const ResueReq = () => {
         <form className="w-[80%]">
              <div className="mb-4">
                 <label className="block text-gray-800 text-sm font-bold mb-2">Full Name</label>
-                <input type="text" className="shadow border rounded w-full py-2 px-3 text-gray-800 focus:outline-none leading-tight focus:shadow-outline" value={fullname} onChange={(e) => setFullName(e.target.value)} />
+                <input type="text" className="shadow border rounded w-full py-2 px-3 text-gray-800 focus:outline-none leading-tight focus:shadow-outline" value={fullname} onChange={(e) => setFullName(e.target.value)} required />
              </div>
 
              <div className="mb-4">
                 <label className="block text-gray-800 text-sm font-bold mb-2">Phone</label>
-                <input type="text" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline" value={phone} onChange={(e) => setPhone(e.target.value)}/>
+                <input type="text" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline" value={phone} onChange={(e) => setPhone(e.target.value)} required/>
              </div>
 
              <div className="mb-4">
                 <label className="block text-gray-800 text-sm font-bold mb-2">Level of Emergency</label>
-                <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline" value={emergencyLevel} onChange={(e) => setEmergencyLevel(e.target.value)}>
+                <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline" value={emergencyLevel} onChange={(e) => setEmergencyLevel(e.target.value)} required>
+                   <option value="">Select level</option>
                    <option value={"Low"}>Low</option>
                    <option value={"Moderate"}>Moderate</option>
                    <option value={"High"}>High</option>
@@ -54,18 +83,21 @@ export const ResueReq = () => {
 
             <div className="mb-4">
                 <label className="block text-gray-800 text-sm font-bold mb-2">Type of Disaster</label>
-                <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline" value={disasterType} onChange={(e) => setDisasterType(e.target.value)}>
+                <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline" value={disasterType} onChange={(e) => setDisasterType(e.target.value)} required>
+                   <option value="">Select Type</option>
                    <option value={"Flood"}>Flood</option>
                    <option value={"Earthquake"}>Earthquake</option>
                    <option value={"Landslide"}>Landslide</option>
+                   <option value={"Fire"}>Fire</option>
+                   <option value={"Other"}>Other</option>
                 </select>
              </div>
 
              <div className="mb-4">
                 <label className="block text-gray-800 text-sm font-bold mb-2">Location</label>
                <div className="flex border shadow appearance-none rounded w-full">
-                 <input type="text" className="w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline" value={location} onChange={(e) => setLocation(e.target.value)}/>
-                 <button>Use current location</button>
+                  <input type="text" className="w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline" value={location} onChange={(e) => setLocation(e.target.value)} required/>
+                  <div className="flex justify-center items-center p-2 cursor-pointer text-2xl" onClick={handleGetLocation}><MdOutlineMyLocation /></div>
                 </div>
              </div>
 
