@@ -59,7 +59,7 @@ export const HomePage = () => {
               Rescue Request
             </NavLink>
             <NavLink
-              to={"/volunteer"}
+              to={"/become-volunteer"}
               className="bg-gray-300 text-green-700 px-6 py-3 rounded-full font-semibold hover:bg-gray-400 transition-colors"
             >
               Become a Volunteer

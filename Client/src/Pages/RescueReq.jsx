@@ -59,7 +59,7 @@ export const ResueReq = () => {
   return (
     <Layout>
       <div className="w-full py-6 px-4 flex flex-col items-center justify-center min-h-screen">
-        <h1 className="text-3xl font-semibold mb-4 text-center">Rescue Request</h1>
+        <h1 className="text-3xl font-semibold mb-6 text-center">Rescue Request</h1>
         <form className="w-[80%]">
              <div className="mb-4">
                 <label className="block text-gray-800 text-sm font-bold mb-2">Full Name</label>

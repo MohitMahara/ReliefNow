@@ -8,6 +8,7 @@ import { Toaster } from "react-hot-toast";
 import "./styles/App.css";
 import { Dashboard } from "./Pages/Dashboard/Dashboard";
 import { ResueReq } from "./Pages/RescueReq";
+import { BecomeVolunteer } from "./Pages/BecomeVolunteer";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forget-password" element={<ForgetPasswordPage />} />
         <Route path="/rescue-request" element={<ResueReq />} />
+        <Route path="/become-volunteer"  element={<BecomeVolunteer/>} />
  
         <Route path="/dashboard" element={<Dashboard />}>
           <Route path="profile" element={<h1>Profile</h1>} />
