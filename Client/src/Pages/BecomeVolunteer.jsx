@@ -4,6 +4,8 @@ import { FaHandsHelping } from "react-icons/fa";
 import { FaBriefcaseMedical } from "react-icons/fa";
 import { IoFastFood } from "react-icons/io5";
 import { FaPersonShelter } from "react-icons/fa6";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 export const BecomeVolunteer = () => {
 
@@ -13,14 +15,36 @@ export const BecomeVolunteer = () => {
     const [location, setLocation] = useState("");
     const [canTravel, setCanTravel] = useState("");
     const [addiNote, setAddiNote] = useState("");
+    const [skills, setSkills] = useState([]);
 
 
 
-   const handleSubmit = () =>{
+   const handleSubmit = async(e) =>{
+     e.preventDefault();
+     try {
+      const volunteerData = {
+        fullName,
+        phone,
+        email,
+        location,
+        canTravel,
+        addiNote,
+        skills
+      }
 
+      const res  = await axios.post(`${meta.import.env.VITE_SERVER_API}/api/v1/auth/become-volunteer`, {
+        volunteerData
+      })
+  
+      if(res.data.success){
+         toast.success("Request has been sent to admin, we will inform you once it is approved");
+      }
+
+     } catch (error) {
+       toast.error(error.message);
+     }
     
    }
-
 
 
   return (
@@ -81,7 +105,7 @@ export const BecomeVolunteer = () => {
 
           <p className="text-2xl mt-8 font-bold">Fill the form below to become a volunteer</p>
 
-          <form className="space-y-4 mt-6 w-full mx-auto p-6">
+          <form className="space-y-4 mt-6 w-full mx-auto p-6" onSubmit={(e) => handleSubmit(e)}>
             <input
               type="text"
               name="name"
@@ -137,8 +161,13 @@ export const BecomeVolunteer = () => {
                     <input
                       type="checkbox"
                       value={skill}
-                      onChange={(e) => {}}
-
+                      onChange={(e) => {setSkills((prev) => { 
+                        if (e.target.checked) {
+                          return [...prev, e.target.value];
+                        } else {
+                          return prev.filter((s) => s !== e.target.value);
+                        }
+                      })}}
                     />{" "}
                     {skill}
                   </label>
@@ -156,19 +185,17 @@ export const BecomeVolunteer = () => {
                     type="radio"
                     name="travel"
                     value="Yes"
-                onChange={(e) => {}}
-
+                    onChange={(e) => setCanTravel(e.target.value)}
                     required
                   />{" "}
-                  Yes
+                   Yes
                 </label>
                 <label>
                   <input
                     type="radio"
                     name="travel"
-                    value="No"
-                    onChange={(e) => {}}
-
+                    value= "No"
+                    onChange={(e) => setCanTravel(e.target.value)}
                   />{" "}
                   No
                 </label>
@@ -191,6 +218,8 @@ export const BecomeVolunteer = () => {
               Become a Volunteer
             </button>
           </form>
+
+
         </div>
       </Layout>
     </>

@@ -85,10 +85,10 @@ export const Header = () => {
                   <>
                     <div className="relative flex flex-col items-center justify-center inline-block cursor-pointer mr-2">
                       {userInfo?.user?.photoURL ? (
-                        <img src={userInfo?.user?.photoURL} className="rounded-full w-8 border h-8" alt="user profile pic" onClick={handleMenu}/>
+                        <img src={userInfo?.user?.photoURL} className="rounded-full w-8 border h-8" alt="user profile pic" onSubmit={handleMenu}/>
                       ) : (
 
-                         <div className="w-8 h-8 bg-gray-500 rounded-full flex items-center justify-center text-white text-xl mb-4" onClick={handleMenu}>
+                         <div className="w-8 h-8 bg-gray-500 rounded-full flex items-center justify-center text-white text-xl mb-4" onSubmit={handleMenu}>
                             <p className="text-lg">{userInfo?.user?.name?.charAt(0)}</p>
                          </div>
                       )}
@@ -98,7 +98,7 @@ export const Header = () => {
                         <NavLink to= "/dashboard" className="px-2 py-1.5 transition duration-200 ease-in-out hover:bg-gray-600 hover:text-white rounded-t-md">
                           Dashboard
                         </NavLink>                        
-                        <NavLink className="px-2 py-1.5 transition duration-200 ease-in-out hover:bg-gray-600 hover:text-white rounded-b-md" onClick={handleLogOut}>
+                        <NavLink className="px-2 py-1.5 transition duration-200 ease-in-out hover:bg-gray-600 hover:text-white rounded-b-md" onSubmit={handleLogOut}>
                           Logout
                         </NavLink>
                       </div>
@@ -116,7 +116,7 @@ export const Header = () => {
             <button
               id="menu-btn"
               className="md:hidden text-gray-700"
-              onClick={handleClick}
+              onSubmit={handleClick}
             >
               <svg
                 className="w-6 h-6 text-white"
@@ -167,10 +167,10 @@ export const Header = () => {
                   <>
                     <div className="relative flex flex-col items-center justify-center inline-block cursor-pointer mr-2">
                       {userInfo?.user?.photoURL ? (
-                        <img src={userInfo?.user?.photoURL} className="rounded-full w-8 border h-8" alt="user profile pic" onClick={handleMenu}/>
+                        <img src={userInfo?.user?.photoURL} className="rounded-full w-8 border h-8" alt="user profile pic" onSubmit={handleMenu}/>
                       ) : (
 
-                         <div className="w-8 h-8 bg-gray-500 rounded-full flex items-center justify-center text-white text-xl mb-4" onClick={handleMenu}>
+                         <div className="w-8 h-8 bg-gray-500 rounded-full flex items-center justify-center text-white text-xl mb-4" onSubmit={handleMenu}>
                          <p className="text-lg">{userInfo?.user?.name?.charAt(0)}</p>
                       </div>
                       )}
@@ -180,7 +180,7 @@ export const Header = () => {
                         <NavLink to= "/dashboard" className="px-2 py-1.5 transition duration-200 ease-in-out hover:bg-gray-600 hover:text-white rounded-t-md">
                           Dashboard
                         </NavLink>  
-                        <NavLink className="px-2 py-1.5 transition duration-200 ease-in-out hover:bg-gray-600 hover:text-white rounded-b-md" onClick={handleLogOut}>
+                        <NavLink className="px-2 py-1.5 transition duration-200 ease-in-out hover:bg-gray-600 hover:text-white rounded-b-md" onSubmit={handleLogOut}>
                           Logout
                         </NavLink>
                       </div>

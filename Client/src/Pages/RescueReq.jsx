@@ -60,7 +60,7 @@ export const ResueReq = () => {
     <Layout>
       <div className="w-full py-6 px-4 flex flex-col items-center justify-center min-h-screen">
         <h1 className="text-3xl font-semibold mb-6 text-center">Rescue Request</h1>
-        <form className="w-[80%]">
+        <form className="w-[80%]" onSubmit={(e) => handleSubmit(e)}>
              <div className="mb-4">
                 <label className="block text-gray-800 text-sm font-bold mb-2">Full Name</label>
                 <input type="text" className="shadow border rounded w-full py-2 px-3 text-gray-800 focus:outline-none leading-tight focus:shadow-outline" value={fullname} onChange={(e) => setFullName(e.target.value)} required />
@@ -97,7 +97,7 @@ export const ResueReq = () => {
                 <label className="block text-gray-800 text-sm font-bold mb-2">Location</label>
                <div className="flex border shadow appearance-none rounded w-full">
                   <input type="text" className="w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline" value={location} onChange={(e) => setLocation(e.target.value)} required/>
-                  <div className="flex justify-center items-center p-2 cursor-pointer text-2xl" onClick={handleGetLocation}><MdOutlineMyLocation /></div>
+                  <div className="flex justify-center items-center p-2 cursor-pointer text-2xl" onSubmit={handleGetLocation}><MdOutlineMyLocation /></div>
                 </div>
              </div>
 
@@ -107,7 +107,7 @@ export const ResueReq = () => {
              </div>
 
              <div className="mb-4">
-               <button className="w-full rounded-lg py-2 px-8 bg-green-700 text-white font-semibold hover:bg-green-600 transition-colors duration-300" onClick={handleSubmit}>Submit</button>
+               <button className="w-full rounded-lg py-2 px-8 bg-green-700 text-white font-semibold hover:bg-green-600 transition-colors duration-300" type="submit">Submit</button>
              </div>
 
            </form>
