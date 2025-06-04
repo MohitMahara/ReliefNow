@@ -13,7 +13,7 @@ import { BecomeVolunteer } from "./Pages/BecomeVolunteer";
 function App() {
   return (
     <>
-      <Toaster position="top-center" toastOptions={{ default: { duration: 1500 } }}
+      <Toaster position="top-center" toastOptions={{ default: { duration: 3000 } }}
       />
       <Routes>
         <Route path="/" element={<HomePage />} />

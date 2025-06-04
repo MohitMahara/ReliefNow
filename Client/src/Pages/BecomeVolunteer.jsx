@@ -32,7 +32,7 @@ export const BecomeVolunteer = () => {
         skills
       }
 
-      const res  = await axios.post(`${meta.import.env.VITE_SERVER_API}/api/v1/auth/become-volunteer`, {
+      const res  = await axios.post(`${import.meta.env.VITE_SERVER_API}/api/v1/auth/become-volunteer`, {
         volunteerData
       })
   

@@ -7,6 +7,7 @@ import {
   generateOtpController,
   verifyOtpController,
   resetPasswordController,
+  becomeVolunteerController
 } from "../Controllers/authController.js";
 
 const router = Router();
@@ -24,5 +25,8 @@ router.post("/generate-otp", generateOtpController);
 router.post("/verify-otp", verifyOtpController);
 
 router.post("/reset-password", resetPasswordController);
+
+router.post("/become-volunteer", becomeVolunteerController);
+
 
 export default router;

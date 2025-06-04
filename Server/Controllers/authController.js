@@ -3,6 +3,7 @@ import UserModel from "../Models/userModel.js"
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 import { client } from "../redisClient.js";
+import volunteerApplicationModel from "../Models/volunteerApplicationModel.js";
 
 export const registerController = async(req, res, next) =>{
     try {
@@ -263,4 +264,48 @@ export const resetPasswordController = async(req, res, next) => {
     } catch (error) {
         next(error);
     }
+}
+
+
+
+export const becomeVolunteerController = async (req, res, next) => {
+     try {
+
+        const {volunteerData} = req.body;
+
+        if(!volunteerData || !volunteerData.fullName || !volunteerData.phone || !volunteerData.email || !volunteerData.location){
+            return res.status(400).send({
+                msg : "All fields are required",
+                success : false
+            })
+        }
+
+        const user = await UserModel.findOne({email: volunteerData.email});
+
+        if(!user){
+            return res.status(400).send({
+                msg : "User does not exist",
+                success : false
+            })
+        }
+
+        const newVolunteerApplication = new volunteerApplicationModel({
+            fullName: volunteerData.fullName,
+            phone: volunteerData.phone,
+            email: volunteerData.email,
+            skills: volunteerData.skills || [],
+            canTravel: volunteerData.canTravel || "No",
+            location: volunteerData.location
+        }).save();
+
+        return res.status(200).send({
+            msg : "Volunteer application submitted successfully",
+            success : true,
+            newVolunteerApplication
+        });
+
+        
+     } catch (error) {
+       next(error); 
+     } 
 }
