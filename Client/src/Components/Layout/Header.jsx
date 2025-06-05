@@ -50,7 +50,7 @@ export const Header = () => {
     <>
       <nav className="bg-green-700 text-white shadow-md w-full">
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center py-4">
+          <div className="flex justify-between items-center py-2">
             <Link to="/" className="flex text-2xl font-bold content-center">
               <p className="ps-2">ReliefNow</p>
             </Link>

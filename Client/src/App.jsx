@@ -9,6 +9,8 @@ import "./styles/App.css";
 import { Dashboard } from "./Pages/Dashboard/Dashboard";
 import { ResueReq } from "./Pages/RescueReq";
 import { BecomeVolunteer } from "./Pages/BecomeVolunteer";
+import { Donate } from "./Pages/Donation/Donate";
+import { Campaign } from "./Pages/Donation/Campaign";
 
 function App() {
   return (
@@ -17,12 +19,15 @@ function App() {
       />
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/campaign/:campId" element={<Campaign />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forget-password" element={<ForgetPasswordPage />} />
         <Route path="/rescue-request" element={<ResueReq />} />
         <Route path="/become-volunteer"  element={<BecomeVolunteer/>} />
- 
+        <Route path="/donate" element={<Donate />} />
+        
+        {/* Dashboard Routes */}
         <Route path="/dashboard" element={<Dashboard />}>
           <Route path="profile" element={<h1>Profile</h1>} />
 

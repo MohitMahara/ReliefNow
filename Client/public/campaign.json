@@ -1,0 +1,62 @@
+[
+ {
+  "campaign_id": "cmp-20250601-001",
+  "title": "Emergency Flood Relief in Assam",
+  "description": "Severe flooding has affected thousands of families in Assam. We are raising funds to provide clean water, food, temporary shelters, and medical aid to those impacted.",
+  "image_url": "https://images.indianexpress.com/2025/06/assam-floods-5cols.jpg",
+  "target_amount": 100000,
+  "raised_amount": 43750,
+  "currency": "INR",
+  "start_date": "2025-06-01T00:00:00Z",
+  "end_date": "2025-06-15T23:59:59Z",
+  "status": "active",
+  "organizer": {
+    "name": "Relief Aid Foundation",
+    "contact_email": "support@reliefaid.org",
+    "contact_number": "+91-9876543210"
+  },
+  "tags": ["flood", "emergency", "India", "Assam", "relief"],
+  "donors_count": 86
+},
+
+{
+  "campaign_id": "cmp-20250601-002",
+  "title": "Earthquake Relief in Western Nepal",
+  "description": "A devastating earthquake has struck the western region of Nepal, leaving many families homeless. This campaign aims to provide emergency shelters, food, and medical supplies.",
+  "image_url": "https://i.ndtvimg.com/i/2015-04/nepal-earthquake-durbar-square_650x400_81430046046.jpg?downsize=545:307",
+  "target_amount": 200000,
+  "raised_amount": 123400,
+  "currency": "INR",
+  "start_date": "2025-05-29T00:00:00Z",
+  "end_date": "2025-06-20T23:59:59Z",
+  "status": "active",
+  "organizer": {
+    "name": "Global Relief Network",
+    "contact_email": "info@grn.org",
+    "contact_number": "+91-9123456789"
+  },
+  "tags": ["earthquake", "Nepal", "emergency", "shelter", "food"],
+  "donors_count": 201
+},
+ 
+{
+  "campaign_id": "cmp-20250601-003",
+  "title": "Support for Cyclone Hudhud Victims",
+  "description": "Cyclone Hudhud has left a trail of destruction in the coastal areas. Your donations will help in rebuilding homes and providing essential supplies to the victims.",
+  "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfkuWT16lqaTNsiDhsuEi7NtQsxXwcFDXngg&s",
+  "target_amount": 500000,
+  "raised_amount": 420300,
+  "currency": "INR",
+  "start_date": "2025-05-25T00:00:00Z",
+  "end_date": "2025-06-25T23:59:59Z",
+  "status": "active",
+  "organizer": {
+    "name": "Disaster Response India",
+    "contact_email": "contact@dri.org",
+    "contact_number": "+91-9988776655"
+  },
+  "tags": ["cyclone", "rebuilding", "disaster", "coastal"],
+  "donors_count": 390
+}
+
+]
