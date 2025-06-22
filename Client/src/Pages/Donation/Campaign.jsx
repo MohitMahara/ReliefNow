@@ -36,13 +36,38 @@ export const Campaign = () => {
              </div>
               
               <div className="right bg-white shadow-md h-auto w-full md:max-w-[25%] mt-4 rounded-md p-3">
-                 <h3 className="text-2xl font-semibold text-gray-900 text-center">Campaign Details</h3>
-                 <div className="h-[0.5%] bg-gray-200 mt-2"></div>
+                 <h3 className="text-xl font-semibold text-gray-800 text-center mb-4">Campaign Details</h3>
+                 <div className="flex flex-col justify-center">
+                    <div className="w-full mb-6">
+                       <div className="w-full bg-gray-200 rounded-full h-5 relative overflow-hidden">
+                          <div className="bg-green-500 h-full rounded-full transition-all duration-300" style={{ width: `${10}%` }}></div>
+                       </div>
+                       <p className="text-sm text-center mt-2">
+                           ₹{(10000).toLocaleString('en-IN')} raised of ₹{(200000).toLocaleString('en-IN')} ({10}%)
+                       </p>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2 mb-6">
+                        {[100, 200, 500, 1000, 2000, 5000].map((amount) => (
+                       <button key={amount} className="bg-gray-100 hover:bg-gray-200 rounded-lg py-2 text-sm font-medium" >
+                          ₹{amount}
+                        </button>
+                       ))}
+                    </div>
+                     <div className="mb-4">
+                       <label className="block text-sm mb-1">Custom Amount</label>
+                       <input type="text" className="w-full border rounded-lg focus:outline-none px-3 py-2 focus:border-green-500" />
+                     </div>
+                     <button className="bg-green-500 text-white px-6 py-3 rounded-md mt-6 cursor-pointer">Donate</button>
+                 </div>
               </div>
-
            </div>
         </div>
       </Layout>
     </>
   );
 };
+
+
+
+
+
