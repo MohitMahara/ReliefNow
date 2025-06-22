@@ -2,6 +2,12 @@ import mongoose from "mongoose";
 
 const volunteerApplicationSchema = new mongoose.Schema({
 
+    userId : {
+        type : mongoose.Types.ObjectId, 
+        ref : "users",
+        required : true,
+    },
+
     fullName: {
         type: String,
         required: true,

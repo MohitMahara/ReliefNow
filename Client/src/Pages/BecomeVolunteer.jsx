@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { Layout } from "../Components/Layout/Layout";
 import { FaHandsHelping } from "react-icons/fa";
 import { FaBriefcaseMedical } from "react-icons/fa";
@@ -6,9 +6,23 @@ import { IoFastFood } from "react-icons/io5";
 import { FaPersonShelter } from "react-icons/fa6";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { UseFirebase } from "../Contexts/firebase";
 
 export const BecomeVolunteer = () => {
 
+   
+    const {userInfo} = UseFirebase();
+    const userId  = userInfo?.user?._id;
+
+
+    if(userInfo?.user?.role == "volunteer"){
+       return <p>You are an volunteer already !</p>;
+    }
+
+    // If Application status is false then it means, the user has not applied for the volunteer role yet
+    // And if it is true then it means he/she has applied and the application is under process.
+
+    const [applicationStatus, setApplicationStatus] = useState(false);
     const [fullName, setFullName] = useState("");
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
@@ -19,10 +33,35 @@ export const BecomeVolunteer = () => {
 
 
 
+    const getApplicationStatus = async() => {
+        try {
+
+          if(!userId) return;
+
+          const res = await axios.get(`${import.meta.env.VITE_SERVER_API}/api/v1/volunteer/application/status/${userId}`);
+
+          if(res.data.success){
+            setApplicationStatus(res.data.status);
+          }
+          
+        } catch (error) {
+          toast.error(error.message);
+        }
+    }
+
+    useEffect(() => {
+      getApplicationStatus();
+         
+    }, [userId])
+
+
    const handleSubmit = async(e) =>{
      e.preventDefault();
      try {
+      const userId = userInfo?.user?._id;
+
       const volunteerData = {
+        userId,
         fullName,
         phone,
         email,
@@ -103,6 +142,16 @@ export const BecomeVolunteer = () => {
             </div>
           </div>
 
+       {applicationStatus && <>
+         <div className="bg-yellow-100 border border-3 border-yellow-500 mt-10 p-4">
+             <p>Your application is under review ! please wait for the admin to aprove it. </p>
+         </div>
+       
+       </>
+       }   
+
+
+      { applicationStatus === false && <>
           <p className="text-2xl mt-8 font-bold">Fill the form below to become a volunteer</p>
 
           <form className="space-y-4 mt-6 w-full mx-auto p-6" onSubmit={(e) => handleSubmit(e)}>
@@ -218,7 +267,8 @@ export const BecomeVolunteer = () => {
               Become a Volunteer
             </button>
           </form>
-
+         </>
+        }
 
         </div>
       </Layout>

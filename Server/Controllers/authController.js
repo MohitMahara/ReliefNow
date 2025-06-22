@@ -273,14 +273,14 @@ export const becomeVolunteerController = async (req, res, next) => {
 
         const {volunteerData} = req.body;
 
-        if(!volunteerData || !volunteerData.fullName || !volunteerData.phone || !volunteerData.email || !volunteerData.location){
+        if(!volunteerData || !volunteerData.fullName || !volunteerData.phone || !volunteerData.email || !volunteerData.location || ! volunteerData.userId){
             return res.status(400).send({
                 msg : "All fields are required",
                 success : false
             })
         }
 
-        const user = await UserModel.findOne({email: volunteerData.email});
+        const user = await UserModel.findById(volunteerData.userId);
 
         if(!user){
             return res.status(400).send({
@@ -290,6 +290,7 @@ export const becomeVolunteerController = async (req, res, next) => {
         }
 
         const newVolunteerApplication = new volunteerApplicationModel({
+            userId : volunteerData.userId,
             fullName: volunteerData.fullName,
             phone: volunteerData.phone,
             email: volunteerData.email,
